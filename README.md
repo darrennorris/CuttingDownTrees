@@ -1,2 +1,2 @@
 # CuttingDownTrees
-Code to accompany Cutting Down Trees article
+R code to accompany Cutting Down Trees article
