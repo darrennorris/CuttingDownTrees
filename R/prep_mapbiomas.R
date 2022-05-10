@@ -223,3 +223,25 @@ df_transition %>%
 #export
 df_transition_out %>% 
   write.csv("muni_fixed_lagloss.csv", row.names = FALSE)
+
+#Urban cover
+#complete set with municipality area
+data.frame(sf_ninestate_muni) %>%
+  select(CD_MUN, NM_MUN, SIGLA_UF, AREA_KM2) %>%
+  crossing(year = 2002:2019) %>% 
+  left_join(
+    mapbiomas_cover %>% 
+      select(state, city, geo_code, 
+             level_0, level_1, level_2, all_of(cols_cover)) %>% 
+      filter(level_2 == "Urban Infrastructure") %>% 
+      pivot_longer(cols = starts_with("X"), names_to = "ayear",  
+                   values_to = "urbancover") %>% 
+      group_by(state, city, geo_code, level_2, ayear) %>%  
+      summarise(urbancover_ha = sum(urbancover)) %>% 
+      mutate(year = as.numeric(substring(ayear,2,5))) %>% 
+      ungroup() %>%
+      select(state,city, geo_code, year, urbancover_ha), 
+    by = c("CD_MUN" = "geo_code", "year" = "year") )%>% 
+  mutate(urbancover_ha = replace_na(urbancover_ha, 0)) %>%
+  arrange(SIGLA_UF, NM_MUN) %>%
+  write.csv("muni_fixed_urbancover.csv", row.names = FALSE)
