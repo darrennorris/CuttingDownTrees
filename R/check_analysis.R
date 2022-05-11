@@ -2,6 +2,7 @@
 library(plyr)
 library(tidyverse)
 library(mgcv)
+memory.limit(30000)
 
 # load data
 #file from run_analysis.R
