@@ -1,4 +1,4 @@
-#Perspective
+#
 #packages
 library(tidyverse)
 library(readxl)
@@ -661,6 +661,8 @@ dfgam_matched %>%
   mutate(start_year = min(year)) %>% 
   mutate(start_event = year== start_year) %>% 
   ungroup() -> dfgam_matched_model
+#Export for further use (checking)
+saveRDS(dfgam_matched_model, "data/dfgam_matched_model.rds")
 
 myctrl <- list(keepData = TRUE, trace = TRUE)  
 #GVA
