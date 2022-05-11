@@ -1,9 +1,7 @@
 library(tidyverse)
 library(readxl)
-library(scales)
-library(mgcv)
 library(stringi)
-
+#load data
 df_muni <- read_excel("data/bla_municipalities_4trees.xlsx", 
                                    na = c("", "NA"),
                                    sheet = "municipality_fixed_ref",
@@ -38,7 +36,8 @@ var_timeconstant <- c("state_name", "muni_name", "muni_area_km2",
                       "long", "lat" ,"dist_statecapital_km", 
                       "flag_urban", "indigenous_area_percent")
 var_timevary <- c("year","pop_dens_km2", "tot_pop", "urban_ha_p1000",
-                   "process_gold_p1000",  "tot_transition_km2",
+                   "process_gold_p1000",  "gva_industry_percent", 
+                  "tot_transition_km2",
                   "loss_immediate_km2", 
                   "tot_loss3y_km2", "tot_loss5y_km2", 
                     "loss_immediate_percent_86", 

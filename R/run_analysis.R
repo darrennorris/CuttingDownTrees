@@ -12,11 +12,10 @@ library(rnaturalearth)
 library(ggspatial)
 library(gratia)
 memory.limit(30000)
-# Use weighted means by total pop of each municipality?
+
 # load data
-#file from gdp_analysis.R
-dfgam <- readRDS("dfgam.rds") #14292 obs. 83 vars
-dfgam$log_min_salary_mean <- log1p(dfgam$min_salary_mean)
+#file from prep_analysis.R
+dfgam <- readRDS("data/dfgam.rds") #14292 obs. 37 vars
 
 #excluding state capitals and those whose borders changed during the study period
 dfgam %>% pull(muni_factor) %>% as.character() %>% unique() %>% length() #794
@@ -251,8 +250,7 @@ cor.test(dfgam$min_salary_mean, dfgam$tot_transition_km2) #0.20
 # Select municipalites ----------------------------------------------------
 # Select municipalities with less and more forest cover
 #Use municipality summary
-munin <- "C:\\Users\\user\\Documents\\Articles\\2022_Norris_gdp_deforestation\\AmazonConservation\\data\\bla_municipalities.xlsx"
-df_muni <- read_excel(munin, 
+df_muni <- read_excel("data/bla_municipalities_4trees.xlsx", 
                       na = c("", "NA"),
                       sheet = "municipality_fixed_ref",
                       .name_repair = "universal") 
@@ -266,14 +264,7 @@ df_muni %>% left_join(dfgam %>% group_by(muni_factor) %>%
          median_pop_dens = median(pop_dens_km2), 
          median_industry = median(gva_industry_percent))) -> df_muni
 
-df_muni %>% 
-  filter(flag_include=="yes") %>%
-  group_by(state_name, muni_name, muni_area_km2, 
-           forestcover_med_km_X1986, forestcover_1986med_percent_muni) %>% 
-  summarise(acount = n()) %>% ungroup() %>% 
-  pull(forestcover_1986med_percent_muni) %>% hist()
-
-# 41 municipalities with low cover in 1985
+# 41 municipalities with low cover in 1986
 df_muni %>% filter(forestcover_1986med_percent_muni <=40, 
                  indigenous_area_percent < 50, flag_include=="yes") %>%
   pull(muni_factor) %>% as.character() %>% unique() -> n40#41
@@ -295,7 +286,7 @@ summary(df_muni_cover40$median_gold_p1000) #0
 summary(df_muni_cover40$median_pop_dens) # median = 7.67, max = 150
 summary(df_muni_cover40$median_industry) # median = 4.9, max = 41.5
 
-# 163
+# 205
 df_muni %>% 
   filter(forestcover_1986med_percent_muni >=60, indigenous_area_percent <= 21, 
          dist_statecapital_km <= 753, muni_area_km2 <= 12535, 
@@ -318,7 +309,7 @@ df_muni %>%
   ungroup() -> df_muni_cover60less
 length(unique(paste(df_muni_cover60less$state_name, df_muni_cover60less$muni_name))) #111
 
-#341 municipalites in matched subset
+#357 municipalites in matched subset
 df_muni_cover40 %>% mutate(trees = "few") %>% 
   bind_rows(df_muni_cover60  %>% mutate(trees = "many")) %>% 
   bind_rows(df_muni_cover60less %>% mutate(trees = "many_loss")) -> dfmatched
@@ -607,6 +598,35 @@ bam_loss_salaryallkm <- bam(log_min_salary_mean ~
 summary(bam_loss_salaryallkm)
 plot(bam_loss_salaryallkm, scale = 0, all.terms = TRUE) ##300 x 250
 
+#Salary with urban area and muni size
+bam_loss_salaryallkm_area <- bam(log_min_salary_mean ~ 
+                              #Spatial smooth
+                              s(long, lat) + 
+                              #Spatial proximity
+                              s(dist_statecapital_km, state_namef, bs='fs', m=1) + 
+                              #Time
+                              s(year, state_namef, bs='fs', m=1) +
+                              #s(year, by = state_namef) +
+                              s(yearf, bs = "re") +
+                              #Forest loss
+                              s(tot_loss5y_km2, k=4) +
+                              #muni area
+                              s(muni_area_km2) +
+                                #urban area 
+                                s(urban_ha_p1000) +
+                              #Random 
+                              s(state_namef, bs="re") + 
+                              s(muni_factor, bs="re"),
+                            #AR1 residual errors
+                            rho=0.874, AR.start = dfgam_salary$start_event, 
+                            family=Tweedie(1.34),
+                            method = "fREML",
+                            discrete = TRUE,
+                            data = dfgam_salary, 
+                            control = myctrl) 
+summary(bam_loss_salaryallkm_area)
+plot(bam_loss_salaryallkm_area, scale = 0, all.terms = TRUE) ##300 x 250
+
 bam_loss_salaryall <- bam(log_min_salary_mean ~ 
                          #Spatial smooth
                          s(long, lat) + 
@@ -633,7 +653,7 @@ plot(bam_loss_salaryall, scale = 0, all.terms = TRUE) ##300 x 250
 
 # GAMs Matched municipalities --------------------------------------------
 # values for tweedie and AR1 calculated in "gdp_bams.R"
-dfgam_matched$log_min_salary_mean <- log1p(dfgam_matched$min_salary_mean)
+
 dfgam_matched %>% 
   filter(!is.na(min_salary_mean)) %>% 
   arrange(muni_factor, year) %>% 
@@ -641,10 +661,6 @@ dfgam_matched %>%
   mutate(start_year = min(year)) %>% 
   mutate(start_event = year== start_year) %>% 
   ungroup() -> dfgam_matched_model
-#GDP 
-aov <- lm(log_gdp_percapita_reais~cover_group, data = dfgam_matched_model)
-summary(aov) 
-anova(aov) #very significant
 
 myctrl <- list(keepData = TRUE, trace = TRUE)  
 #GVA
