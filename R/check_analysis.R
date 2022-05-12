@@ -150,7 +150,8 @@ rid_100 <- 1:((41*3*14)*100)
 dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
 #run model for each randomized sample
 dfcheck <- plyr::ddply(dftest_random, .(run_id) ,.fun = mygams)
-dfcheck_10 %>% 
+#dfcheck_10 %>% 
+  dfcheck %>% 
   filter(!var_name== "(Intercept)") %>% 
   mutate(var_name = if_else(var_name=="cover_groupmore cover", 
                             "more cover", "more cover\nwith loss")) %>%
