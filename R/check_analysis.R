@@ -143,20 +143,34 @@ dfout <- rbind(dfout_gdp, dfout_gva, dfout_sal)
 dfout
 }
 #test with first 10 iterations
-rid_10 <- 1:((41*3*14)*10)
-dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
+#rid_10 <- 1:((41*3*14)*10)
+#dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
 #test with first 100 iterations
-rid_100 <- 1:((41*3*14)*100)
-dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
-#run model for each randomized sample
+#rid_100 <- 1:((41*3*14)*100)
+#dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
+
+#run models for each randomized sample
 dfcheck <- plyr::ddply(dftest_random, .(run_id) ,.fun = mygams)
 saveRDS(dfcheck, "data/dfcheck.RDS")
+dfcheck <- readRDS("data/dfcheck.RDS")
+
+#summary
+dfcheck %>% 
+  filter(!var_name== "(Intercept)") %>% 
+  mutate(var_name = if_else(var_name=="cover_groupmore cover", 
+                            "more cover", "more cover\nwith loss")) %>%
+  mutate(flag_sig = if_else(pval <0.05,1,0)) %>% 
+  group_by(var_name, response) %>% 
+  summarise(total_sample = n(), 
+            total_sig = sum(flag_sig)) %>% 
+  mutate(prop_sig = total_sig/total_sample)
+  
 #dfcheck_10 %>% 
-  dfcheck %>% 
+dfcheck %>% 
   filter(!var_name== "(Intercept)") %>% 
   mutate(var_name = if_else(var_name=="cover_groupmore cover", 
                             "more cover", "more cover\nwith loss")) %>%
   ggplot(aes(x=pval)) + 
-  geom_histogram() + 
-  geom_vline(xintercept = 0.05) +
+  geom_histogram(bins=50) + 
+  geom_vline(xintercept = 0.05, colour="blue", size=1) +
   facet_grid(response~var_name)
