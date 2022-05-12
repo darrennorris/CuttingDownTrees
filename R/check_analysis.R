@@ -150,6 +150,7 @@ rid_100 <- 1:((41*3*14)*100)
 dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
 #run model for each randomized sample
 dfcheck <- plyr::ddply(dftest_random, .(run_id) ,.fun = mygams)
+saveRDS(dfcheck, "data/dfcheck.RDS")
 #dfcheck_10 %>% 
   dfcheck %>% 
   filter(!var_name== "(Intercept)") %>% 
