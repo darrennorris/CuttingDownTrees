@@ -152,13 +152,13 @@ dfout <- rbind(dfout_gdp, dfout_gva, dfout_sal)
 dfout
 }
 #test with first 10 iterations
-rid_10 <- 1:((41*3*14)*10)#9:44-9:47
-dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
+#rid_10 <- 1:((41*3*14)*10)#9:44-9:47
+#dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
 #test with first 100 iterations
 #rid_100 <- 1:((41*3*14)*100)
 #dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
 
-#run models for each randomized sample
+#run models for each randomized sample 10
 dfcheck <- plyr::ddply(dftest_random, .(run_id) ,.fun = mygams)
 saveRDS(dfcheck, "data/dfcheck.RDS")
 dfcheck <- readRDS("data/dfcheck.RDS")
