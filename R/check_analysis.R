@@ -78,9 +78,12 @@ bam_loss_gva <- bam(log_gva_percapita_reais ~
 #get p values
 sumout_gva <- summary(bam_loss_gva)
 dft_gva <- as.data.frame(sumout_gva$p.pv)
+myest <- as.numeric(sumout_gva$p.coeff)#estimate
+myse <- as.numeric(sumout_gva$se[1:3])#SE of estimate
 rm("bam_loss_gva")
 dfout_gva <- data.frame(response = "GVA", 
-                        var_name = row.names(dft_gva), pval = dft_gva[,1])
+                        var_name = row.names(dft_gva), pval = dft_gva[,1], 
+                        est = myest, est_se = myse)
 
 #GDP
 bam_loss_01 <- bam(log_gdp_percapita_reais~ 
@@ -107,9 +110,12 @@ bam_loss_01 <- bam(log_gdp_percapita_reais~
 #get p values
 sumout_gdp <- summary(bam_loss_01)
 dft_gdp <- as.data.frame(sumout_gdp$p.pv)
+myest_gdp <- as.numeric(sumout_gdp$p.coeff)#estimate
+myse_gdp <- as.numeric(sumout_gdp$se[1:3])#SE of estimate
 rm("bam_loss_01")
 dfout_gdp <- data.frame(response = "GDP", 
-                        var_name = row.names(dft_gdp), pval = dft_gdp[,1])
+                        var_name = row.names(dft_gdp), pval = dft_gdp[,1], 
+                        est = myest_gdp, est_se = myse_gdp)
 
 #Salary
 bam_loss_02 <- bam(log_min_salary_mean ~ 
@@ -135,16 +141,19 @@ bam_loss_02 <- bam(log_min_salary_mean ~
                    control = myctrl)   
 sumout_sal <- summary(bam_loss_02)
 dft_sal <- as.data.frame(sumout_sal$p.pv)
+myest_sal <- as.numeric(sumout_sal$p.coeff)#estimate
+myse_sal <- as.numeric(sumout_sal$se[1:3])#SE of estimate
 rm("bam_loss_02")
 dfout_sal <- data.frame(response = "salary", 
-                        var_name = row.names(dft_sal), pval = dft_sal[,1])
+                        var_name = row.names(dft_sal), pval = dft_sal[,1], 
+                        est = myest_sal, est_se = myse_sal)
 
 dfout <- rbind(dfout_gdp, dfout_gva, dfout_sal)
 dfout
 }
 #test with first 10 iterations
-#rid_10 <- 1:((41*3*14)*10)
-#dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
+rid_10 <- 1:((41*3*14)*10)#9:44-9:47
+dfcheck_10 <- plyr::ddply(dftest_random[rid_10, ], .(run_id) ,.fun = mygams)
 #test with first 100 iterations
 #rid_100 <- 1:((41*3*14)*100)
 #dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
