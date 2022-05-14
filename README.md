@@ -6,7 +6,7 @@
 
 Data and R code to accompany the article:
 
-[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) et. al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. EarthArXiv pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
+[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) et. al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *EarthArXiv pre-print* (not peer reviewed): https://doi.org/10.31223/X51S8P 
 
 <strong>AIM</strong>: Apply the most up to date data to examine spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia.
 
@@ -18,7 +18,7 @@ A timely continuation of the investigations carried out by [Rhett Butler](https:
 We present evidence examining spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia. Specifically we tested two predictions embedded in arguments used by influential interest groups: i) where there is less forest cover economic progress should increase and ii) areas with most recent deforestation should have increased economic progress. 
 <img align="right" src="data/figures/fig_map_studyarea.png" alt="Amazon study" width="300" style="margin-top: 20px">
 <strong>Methods</strong>: 
-Complementary methods assessed variation in economic progress across 794 administrative districts (municipalities) covering 4.9 Mkm2 of the Brazilian Amazon from 2002 to 2019. A representative subset of municipalities was used to compare economic and basic socioeconomic indicators across municipalities with contrasting forest coverage.  
+Complementary methods assessed variation in economic progress across 794 administrative districts (municipalities) covering 4.9 Mkm^2^ of the Brazilian Amazon from 2002 to 2019. A representative subset of municipalities was used to compare economic and basic socioeconomic indicators across municipalities with contrasting forest coverage.  
 
 <strong>Results</strong>: 
 Contrasting results between the full and a representative subset of municipalities suggests that municipality-level economic progress cannot be directly attributed to loss of natural forests. There was no association between forest loss and economic (average salary) or basic socioeconomic indicators (existence of sanitation plans and internet connectivity). The economic progress of municipalities with less than 40% forest cover in 1986 was no different to that of similar municipalities with more than 60% forest cover from 1986 to 2019. 
