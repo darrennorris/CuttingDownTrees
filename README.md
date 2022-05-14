@@ -22,7 +22,7 @@ Complementary methods assessed variation in economic progress across 794 adminis
 
 <strong>Results</strong>: 
 Contrasting results between the full and a representative subset of municipalities suggests that municipality-level economic progress cannot be directly attributed to loss of natural forests. There was no association between forest loss and economic (average salary) or basic socioeconomic indicators (existence of sanitation plans and internet connectivity). The economic progress of municipalities with less than 40% forest cover in 1986 was no different to that of similar municipalities with more than 60% forest cover from 1986 to 2019. 
-
+<img align="right" src="data/figures/partial_gdp_matched.png" alt="partial plot" width="300" style="margin-top: 20px">
 <strong>Conclusion</strong>: 
 The evidence contradicted both of the predictions tested. Reducing forest cover does not appear to directly promote socioeconomic progress. Any localized associations between forest cover and poverty most likely result from other more plausible alternatives including lack of opportunity and a widespread failure to effectively implement and enforce existing policies within the local socioeconomic context.
 
