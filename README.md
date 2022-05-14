@@ -6,7 +6,7 @@
 
 R code to accompany Cutting Down Trees article.
 
-Norris, D et.al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. EarthArXiv pre-print  https://doi.org/10.31223/X51S8P 
+Norris, D et.al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. EarthArXiv pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
 
 ## Abstract
 
