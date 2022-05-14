@@ -1,12 +1,10 @@
 # CuttingDownTrees
 
-<a href="https://zenodo.org/badge/latestdoi/490787288"><img src="https://zenodo.org/badge/490787288.svg" alt="DOI"></a>
+<a href="https://zenodo.org/badge/latestdoi/490787288"><img src="https://zenodo.org/badge/490787288.svg" alt="DOI"></a> Data and R code to accompany the article:
 
 <img align="right" src="data/www/natural_forest_cover_brazilian_amazon.jpg" alt="Amazon forest cover" width="300" style="margin-top: 20px">
 
-Data and R code to accompany the article:
-
-[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) et. al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *EarthArXiv* pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
+[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) *et. al*. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *EarthArXiv* pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
 
 <strong>AIM</strong>: Apply the most up to date data to examine spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia.
 
