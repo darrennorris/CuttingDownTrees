@@ -8,7 +8,7 @@
 
 <strong>AIM</strong>: Apply the most up to date data to examine spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia.
 
-A (perhaps) timely continuation of the investigations carried out by [Rhett Butler](https://news.mongabay.com/by/rhett-a-butler/) at [Mongabay](https://news.mongabay.com/2021/11/amazon-deforestation-unexpectedly-surges-22-to-highest-level-since-2006/). 
+A (perhaps) timely continuation to the investigations carried out by [Rhett Butler](https://news.mongabay.com/by/rhett-a-butler/) at [Mongabay](https://news.mongabay.com/2021/11/amazon-deforestation-unexpectedly-surges-22-to-highest-level-since-2006/). 
 
 ## Abstract
 
