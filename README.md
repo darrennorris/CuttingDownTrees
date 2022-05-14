@@ -4,7 +4,7 @@
 
 <img align="right" src="www/natural_forest_cover_brazilian_amazon.jpg" alt="Amazon forest cover" width="300" style="margin-top: 20px">
 
-R code to accompany Cutting Down Trees article.
+R code to accompany the article:
 
 [NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) et. al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. EarthArXiv pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
 
