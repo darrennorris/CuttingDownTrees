@@ -16,7 +16,7 @@ A timely continuation of the investigations carried out by [Rhett Butler](https:
 
 <strong>Background and aims</strong>: 
 We present evidence examining spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia. Specifically we tested two predictions embedded in arguments used by influential interest groups: i) where there is less forest cover economic progress should increase and ii) areas with most recent deforestation should have increased economic progress. 
-
+<img align="right" src="data/figures/fig_map_studyarea.png" alt="Amazon study" width="300" style="margin-top: 20px">
 <strong>Methods</strong>: 
 Complementary methods assessed variation in economic progress across 794 administrative districts (municipalities) covering 4.9 Mkm2 of the Brazilian Amazon from 2002 to 2019. A representative subset of municipalities was used to compare economic and basic socioeconomic indicators across municipalities with contrasting forest coverage.  
 
@@ -29,6 +29,6 @@ The evidence contradicted both of the predictions tested. Reducing forest cover 
 <strong>Implications for Conservation</strong>: 
 Our findings support evidence from across the tropics that show deforestation does not necessarily generate transformative and equitable food production systems or lead to poverty alleviation. 
 
-## Repository includes the following files
+## Steps to repeat analysis
 
 ... in progress ...
