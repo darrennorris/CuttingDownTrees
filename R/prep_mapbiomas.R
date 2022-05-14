@@ -59,9 +59,9 @@ mapbiomas_trans <- readRDS("mapbiomas_trans.RDS")
 mapbiomas_cover <- readRDS("mapbiomas_cover.RDS")
 
 #IBGE spatial data
-ibge_muni <- "vector\\brazil_ninestate_municipalities\\ninestate_muni.shp"
+ibge_muni <- "data/vector/brazil_ninestate_municipalities/ninestate_muni.shp"
 sf_ninestate_muni <- st_read(ibge_muni)
-ibge_state <- "vector\\ninestate_poly.shp"
+ibge_state <- "data/vector/ninestate_poly.shp"
 sf_ninestate <- st_read(ibge_state)
 
 # Prep summaries -----------------------------------------------------

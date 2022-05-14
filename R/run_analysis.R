@@ -204,7 +204,7 @@ dfgam %>%
         legend.position = "top", legend.box = "horizontal") -> figa_loss_salary
 figa_loss_salary
 
-png(file = "figures//fig_loss_gdp_salary.png", 
+png(file = "data/figures//fig_loss_gdp_salary.png", 
     bg = "white", type = c("cairo"), 
     width=5000, height=8000, res = 600)
 gridExtra::grid.arrange(figa_loss_gva, figb_loss_gdp, 
@@ -336,7 +336,7 @@ bla_state_siglas <- c("AC", "AP", "AM", "MA",
 dfstates <- data.frame(bla_state_names, bla_state_siglas)
 
 #Municipal polygons
-ibge_muni <- "vector//brazil_ninestate_municipalities//ninestate_muni.shp"
+ibge_muni <- "data/vector//brazil_ninestate_municipalities//ninestate_muni.shp"
 sf_ninestate_muni <- st_read(ibge_muni) 
 # load data
 world <- ne_countries(scale = "medium", returnclass = "sf")
@@ -376,7 +376,7 @@ sf_ninestate_muni %>%
         plot.title.position = "plot", 
         legend.position="top") -> fig_map_studyarea
 #export
-png(file = "figures//fig_map_studyarea.png", bg = "white", type = c("cairo"), 
+png(file = "data/figures//fig_map_studyarea.png", bg = "white", type = c("cairo"), 
     width=8000, height=4000, res = 600)
 fig_map_studyarea
 dev.off()
@@ -434,7 +434,7 @@ dfgam_matched %>%
   theme(plot.title.position = "plot") -> fig_salary_matched
 fig_salary_matched
 #Export
-png(file = "figures//fig_economic_matched.png", 
+png(file = "data/figures//fig_economic_matched.png", 
     bg = "white", type = c("cairo"), 
     width=4000, height=5000, res = 600)
 grid.arrange(fig_GVA_matched, 
@@ -823,7 +823,7 @@ df_muni_matched %>%
 fig_essential_inter
 
 #Export
-png(file = "figures//fig_essentials_matched.png", 
+png(file = "data/figures//fig_essentials_matched.png", 
     bg = "white", type = c("cairo"), 
     width=3500, height=2000, res = 600)
 lay <- rbind(c(1,1,2,2),
@@ -957,7 +957,7 @@ dfmatched %>%
   summarise(urban = length(flag_urbanf)) 
 
 library(Hmisc)
-png(file = "figures//fig_back2back.png", 
+png(file = "data/figures//fig_back2back.png", 
     bg = "white", type = c("cairo"), 
     width=1500, height=7000, res = 600)
 par(mfrow = c(6, 1))
@@ -982,7 +982,7 @@ histbackback(df_muni_cover40$forestcover_2019med_percent_muni,
 dev.off()
 
 #loss
-png(file = "figures//fig_back2backloss.png", 
+png(file = "data/figures//fig_back2backloss.png", 
     bg = "white", type = c("cairo"), 
     width=1500, height=7000, res = 600)
 par(mfrow = c(6, 1))
