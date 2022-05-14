@@ -8,7 +8,7 @@ R code to accompany Cutting Down Trees article.
 
 Norris, D et.al. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. EarthArXiv pre-print  https://doi.org/10.31223/X51S8P 
 
-##Abstract
+## Abstract
 
 <strong>Background and aims</strong>: 
 We present evidence examining spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia. Specifically we tested two predictions embedded in arguments used by influential interest groups: i) where there is less forest cover economic progress should increase and ii) areas with most recent deforestation should have increased economic progress. 
