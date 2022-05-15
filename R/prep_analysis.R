@@ -11,7 +11,7 @@ df_muni_year <- read_excel("data/bla_municipalities_4trees.xlsx",
                       sheet = "municipality_annual",
                       .name_repair = "universal")
 
-#municipalities to include. Exclude new munis and state capitals
+#municipalities to include. Exclude new and state capitals
 df_muni %>% filter(flag_include == "yes") %>% pull(muni_code) -> keep_muni #794
 
 #Basic reference vectors
@@ -66,6 +66,14 @@ dfgam$log_gva_percapita_reais <- log(dfgam$gva_agri_percapita_reais)
 dfgam$log_min_salary_mean <- log1p(dfgam$min_salary_mean)
 dfgam$gdp_percapita_usd = dfgam$gdp_percapita_reais / 3.946
 dfgam$gva_agri_percapita_usd = dfgam$gva_agri_percapita_reais / 3.946
+
+#check
+dfgam %>% 
+  filter(is.na(totloss_5y_percent_86)) %>%
+  group_by(state_name, muni_name, year) %>% summarise(acount = n()) #0
+dfgam %>% 
+  filter(is.na(loss_immediate_percent_86)) %>%
+  group_by(state_name, muni_name, year) %>% summarise(acount = n()) #0
 
 #Export for further use
 saveRDS(dfgam, "data/dfgam.rds")
