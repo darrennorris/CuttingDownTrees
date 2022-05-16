@@ -904,9 +904,9 @@ df_muni_matched %>%
   group_by(trees) %>% 
   summarise(count_muni = n(), 
             count_states = length(unique(state_name)),
-            median_cover_1985 = median(forestcover_1986med_percent_muni), 
-            min_cover_1985 = min(forestcover_1986med_percent_muni), 
-            max_cover_1985 = max(forestcover_1986med_percent_muni)
+            median_cover_1986 = median(forestcover_1986med_percent_muni), 
+            min_cover_1986 = min(forestcover_1986med_percent_muni), 
+            max_cover_1986 = max(forestcover_1986med_percent_muni)
   )
 df_muni_matched %>% 
   group_by(trees) %>% 
