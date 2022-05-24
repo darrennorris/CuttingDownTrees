@@ -45,4 +45,4 @@ Code used to obtain rho values for AR1 correlations and Tweedie index parameter 
 
 File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/run_analysis.R"><code>run_analysis.R</code></a> runs all the analysis and produces figures used in the article. 
 
-File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/check_analysis.R"><code>check_analysis.R</code></a> runs jackstrap randomization used to control effect of sample size.
+File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/check_analysis.R"><code>check_analysis.R</code></a> runs jackknife randomization used to control effect of sample size.
