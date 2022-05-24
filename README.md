@@ -29,8 +29,14 @@ Our findings support evidence from across the tropics that show deforestation do
 
 ## Steps to repeat analysis
 
+..... in progress ........
+
 Files are organized in two folders: [R](https://github.com/darrennorris/CuttingDownTrees/tree/main/R), which has code files and [data](https://github.com/darrennorris/CuttingDownTrees/tree/main/data), which has everything else.
 
 ### Step 1 preparation
 
-File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/prep_mapbiomas.R"><code>prep_mapbiomas.R</code></a> — extracts required subset of municipalities (administrative units) from [MapBiomas](https://mapbiomas.org/en/statistics) data and calculates necessary cover and transition values.
+File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/prep_mapbiomas.R"><code>prep_mapbiomas.R</code></a> — extracts required subset of municipalities (local government administrative units) from [MapBiomas](https://mapbiomas.org/en/statistics) data and calculates necessary cover and transition values.
+
+File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/prep_analysis.R"><code>prep_analysis.R</code></a> — selects variables used in modelling, creates new variables (e.g. log transformations) and exports object as R data format ready for modelling.
+
+### Step 2 Models and analysis
