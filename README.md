@@ -40,3 +40,5 @@ File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/prep_
 File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/prep_analysis.R"><code>prep_analysis.R</code></a> — selects variables used in modelling, creates new variables (e.g. log transformations) and exports object as R data format ready for modelling.
 
 ### Step 2 Models and analysis
+
+Code used to obtain rho values for AR1 correlations and Tweedie index parameter is in file <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/gdp_bams.R"><code>gdp_bams.R</code></a> . File <a href="https://github.com/darrennorris/CuttingDownTrees/blob/main/R/gdp_gams.R"><code>gdp_gams.R</code></a> has additional examples of code used to calculate cross correlations for timeseries, temporal autocorrelation and spatial autocorrelation, plus testing of different GAM model types. 
