@@ -517,32 +517,32 @@ df_muni %>%
 length(unique(paste(df_muni_cover60less$state_name, df_muni_cover60less$muni_name))) #111
 
 #357 municipalites in matched subset (41 + 205 + 111)
-df_muni_cover40 %>% mutate(trees = "few") %>% 
-  bind_rows(df_muni_cover60  %>% mutate(trees = "many")) %>% 
-  bind_rows(df_muni_cover60less %>% mutate(trees = "many_loss")) -> dfmatched
+df_muni_cover40 %>% mutate(trees = "a_low forest cover") %>% 
+  bind_rows(df_muni_cover60  %>% mutate(trees = "c_high forest cover")) %>% 
+  bind_rows(df_muni_cover60less %>% mutate(trees = "b_medium  forest cover")) -> dfmatched
 nrow(dfmatched) #357
 matched_area <- sum(dfmatched$muni_area_km2)
 (matched_area / tot_muni_area_km2) * 100 #17.88
-#Analysis with matched groups
-#matched subset
+
+# Matched subset names.
 dfgam %>% 
   right_join(dfmatched %>% select(state_name, muni_name, trees)) -> dfgam_matched
 dfgam_matched$cover_group <- as.factor(dfgam_matched$trees)
-levels(dfgam_matched$cover_group) <- c("less cover", 
-                                       "more cover", 
-                                       "more loss")
+levels(dfgam_matched$cover_group) <- c("low forest cover", 
+                                       "medium forest cover", 
+                                       "high forest cover")
 
 # Study area map ----------------------------------------------------------
 
-#Study area map showing matched locations
-#Basic reference vectors
+# Study area map showing matched locations
+# Basic reference vectors
 bla_state_names <- c("Acre", "Amapá", "Amazonas", "Maranhão", 
                      "Mato Grosso", "Pará", "Tocantins", "Rondônia", "Roraima")
 bla_state_siglas <- c("AC", "AP", "AM", "MA", 
                       "MT", "PA", "TO", "RO", "RR")
 dfstates <- data.frame(bla_state_names, bla_state_siglas)
 
-#Municipal polygons
+# Municipal polygons
 ibge_muni <- "data/vector//brazil_ninestate_municipalities//ninestate_muni.shp"
 sf_ninestate_muni <- st_read(ibge_muni) 
 # load data
@@ -557,9 +557,9 @@ sf_matched <- st_as_sf(x = dfmatched,
                coords = c("long", "lat"),
                crs = projcrs)
 sf_matched$cover_group <- as.factor(sf_matched$trees)
-levels(sf_matched$cover_group ) <- c("less cover", 
-                                     "more cover", 
-                                     "more loss")
+levels(sf_matched$cover_group) <- c("low forest cover", 
+                                     "medium forest cover", 
+                                     "high forest cover")
 
 sf_ninestate_muni %>% 
   ggplot()+ 
@@ -582,8 +582,11 @@ sf_ninestate_muni %>%
   theme(text = element_text(size = 20), 
         plot.title.position = "plot", 
         legend.position="top") -> fig_map_studyarea
+fig_map_studyarea
+
 #export
-png(file = "data/figures//fig_map_studyarea.png", bg = "white", type = c("cairo"), 
+png(file = "data/figures/fig_map_studyarea.png", bg = "white", 
+    type = c("cairo"), 
     width=8000, height=4000, res = 600)
 fig_map_studyarea
 dev.off()
@@ -736,7 +739,7 @@ summary(bam_loss_02)
 plot(bam_loss_02, scale = 0, all.terms = TRUE) # 500 W x 400 H
 
 
-# Other well-being essentials --------------------------------------------------------
+# Socioeconomic indicators --------------------------------------------------------
 # other essentials to a standard of living
 df_muni %>% filter(flag_include == "yes") %>% 
   pull(tot_pop_2019) %>% sum() -> pop_2019 #21113376
