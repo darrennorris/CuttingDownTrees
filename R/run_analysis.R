@@ -516,7 +516,7 @@ df_muni %>%
   ungroup() -> df_muni_cover60less
 length(unique(paste(df_muni_cover60less$state_name, df_muni_cover60less$muni_name))) #111
 
-#357 municipalites in matched subset
+#357 municipalites in matched subset (41 + 205 + 111)
 df_muni_cover40 %>% mutate(trees = "few") %>% 
   bind_rows(df_muni_cover60  %>% mutate(trees = "many")) %>% 
   bind_rows(df_muni_cover60less %>% mutate(trees = "many_loss")) -> dfmatched
