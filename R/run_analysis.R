@@ -15,7 +15,7 @@ memory.limit(30000)
 
 # load data
 #file from prep_analysis.R
-dfgam <- readRDS("data/dfgam.rds") #14292 obs. 37 vars
+dfgam <- readRDS("data/dfgam.rds") #14292 obs. 38 vars
 
 #794 of 808 municipalities
 #Excluding state capitals and those whose borders changed during the study period
@@ -71,30 +71,33 @@ tot_muni_area_km2 #4975904
 
 # Useful values -----------------------------------------------------------
 
+# Maximum annual forest loss
 dfgam %>% 
   group_by(year) %>%
   summarise(area = sum(tot_transition_km2, na.rm=TRUE)) %>% 
   pull(area) %>% max() -> mapbiomasloss_all_max #[1] 24800.01
+# Maximum annual GDP per capita
 dfgam %>% 
   group_by(year) %>%
   summarise(area = median(gdp_percapita_usd, na.rm=TRUE)) %>% 
   pull(area) %>% max() -> gdp_percapita_usd_median_max #[1] 3401.44
+# Maximum annual agricultre GVA per capita
 dfgam %>% 
   group_by(year) %>%
   summarise(area = median(gva_agri_percapita_usd, na.rm=TRUE)) %>% 
   pull(area) %>% max() -> gva_percapita_usd_median_max #593.70
+# Maximum annual salary
+dfgam %>% 
+  group_by(year) %>%
+  summarise(area = median(min_salary_mean, na.rm=TRUE)) %>% 
+  filter(!is.na(area)) %>%
+  pull(area) %>% max() -> min_salary_mean_median_max #[1] 1.9
 
 
 # Figure 2 ----------------------------------------------------------------
 
 axis_trans_mapbiomasgva <- mapbiomasloss_all_max / gva_percapita_usd_median_max
 axis_trans_mapbiomasall <- mapbiomasloss_all_max / gdp_percapita_usd_median_max
-#salary
-dfgam %>% 
-  group_by(year) %>%
-  summarise(area = median(min_salary_mean, na.rm=TRUE)) %>% 
-  filter(!is.na(area)) %>%
-  pull(area) %>% max() -> min_salary_mean_median_max #[1] 1.9
 axis_trans_mapbiomassal <- mapbiomasloss_all_max / min_salary_mean_median_max
 
 #data frame to hold labels
@@ -132,7 +135,7 @@ dfgam %>%
                      sec.axis = sec_axis(~./axis_trans_mapbiomasgva,#divided by transformation rate, in order to be represented based on the first y-axis
                                          name = "agriculture GVA per capita (US$)")) + 
   scale_x_continuous(limits = c(2001.5, 2019.5))  + 
-  geom_label(data = df_mapbiomasall_labels, 
+  geom_label(data = df_mapbiomasall_labels_gva, 
              aes(x= year, y = yaxis_value, label = label_values_gva), 
              colour = c("blue", "black")) + 
   labs(title = "(A)", 
@@ -204,8 +207,8 @@ gridExtra::grid.arrange(figa_loss_gva, figb_loss_gdp,
                         figa_loss_salary, ncol = 1)
 dev.off()
 
-#Correlations
-#Annual for overall area
+# Correlations
+# GDP and GVA with annual forest loss
 dfgam %>% 
   group_by(year) %>%
   summarise(area = sum(tot_transition_km2, na.rm=TRUE), 
@@ -220,6 +223,7 @@ dfgam %>%
             cor_p_gdp = cor.test(gdp, area, 
                                  method = "spearman")$p.value,
   )
+# Salary with annual forest loss
 dfgam %>% 
   filter(!is.na(min_salary_mean)) %>%
   group_by(year) %>%
@@ -238,8 +242,6 @@ cor.test(dfgam$gdp_percapita_reais, dfgam$tot_transition_km2) #0.074
 cor.test(dfgam$log_gdp_percapita_reais, dfgam$tot_transition_km2) #0.13
 cor.test(dfgam$min_salary_mean, dfgam$tot_transition_km2) #0.20
 
-
-
 # GAM models all municipalities  --------------------------------------------
 
 colNA <- names(dfgam)[sapply(dfgam, anyNA)]
@@ -248,6 +250,7 @@ colNA <- names(dfgam)[sapply(dfgam, anyNA)]
 dfgam %>% 
   select(!all_of(colNA)) -> dfgam_gdp
 # values for tweedie and AR1 calculated in "gdp_bams.R"
+
 dfgam_gdp %>% 
   arrange(muni_factor, year) %>% 
   group_by(muni_factor) %>%
@@ -256,7 +259,7 @@ dfgam_gdp %>%
   ungroup() -> dfgam_gdp
 
 myctrl <- list(keepData = TRUE, trace = TRUE)  
-#GVA - 
+#GVA - # Natural forest loss from past five years (km2)
 bam_loss_gvaallkm <- bam(log_gva_percapita_reais ~ 
                            #Spatial smooth
                            s(long, lat) + 
@@ -281,7 +284,7 @@ bam_loss_gvaallkm <- bam(log_gva_percapita_reais ~
                          control = myctrl)   
 summary(bam_loss_gvaallkm)
 plot(bam_loss_gvaallkm, scale = 0, all.terms = TRUE) #300 x 250
-
+# Now with natural forest loss as proportion of 1986 natural forest cover
 bam_loss_gvaall <- bam(log_gva_percapita_reais ~ 
                          #Spatial smooth
                          s(long, lat) + 
@@ -307,7 +310,7 @@ bam_loss_gvaall <- bam(log_gva_percapita_reais ~
 summary(bam_loss_gvaall)
 plot(bam_loss_gvaall, scale = 0, all.terms = TRUE)
 
-#GDP - 
+#GDP - # Natural forest loss from past five years (km2)
 bam_loss_gdpallkm <- bam(log_gdp_percapita_reais ~ 
                            #Spatial smooth
                            s(long, lat) + 
@@ -332,6 +335,7 @@ bam_loss_gdpallkm <- bam(log_gdp_percapita_reais ~
 summary(bam_loss_gdpallkm)
 plot(bam_loss_gdpallkm, scale = 0, all.terms = TRUE)#300 x 250
 
+# Now with natural forest loss as proportion of 1986 natural forest cover
 bam_loss_gdpall <- bam(log_gdp_percapita_reais ~ 
                          #Spatial smooth
                          s(long, lat) + 
@@ -396,7 +400,7 @@ bam_loss_salaryallkm <- bam(log_min_salary_mean ~
 summary(bam_loss_salaryallkm)
 plot(bam_loss_salaryallkm, scale = 0, all.terms = TRUE) ##300 x 250
 
-#Salary with urban area and muni size
+#Salary with urban area and muni size. No improvement.
 bam_loss_salaryallkm_area <- bam(log_min_salary_mean ~ 
                                    #Spatial smooth
                                    s(long, lat) + 
@@ -425,6 +429,7 @@ bam_loss_salaryallkm_area <- bam(log_min_salary_mean ~
 summary(bam_loss_salaryallkm_area)
 plot(bam_loss_salaryallkm_area, scale = 0, all.terms = TRUE) ##300 x 250
 
+# Now with natural forest loss as proportion of 1986 natural forest cover
 bam_loss_salaryall <- bam(log_min_salary_mean ~ 
                             #Spatial smooth
                             s(long, lat) + 
