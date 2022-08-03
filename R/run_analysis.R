@@ -133,7 +133,7 @@ dfgam %>%
   scale_y_continuous(limits = c(0, 27000), 
                      #for the second y-axis
                      sec.axis = sec_axis(~./axis_trans_mapbiomasgva,#divided by transformation rate, in order to be represented based on the first y-axis
-                                         name = "agriculture GVA per capita (US$)")) + 
+                                         name = "GVA per capita (US$)")) + 
   scale_x_continuous(limits = c(2001.5, 2019.5))  + 
   geom_label(data = df_mapbiomasall_labels_gva, 
              aes(x= year, y = yaxis_value, label = label_values_gva), 
