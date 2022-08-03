@@ -140,9 +140,8 @@ dfgam %>%
              colour = c("blue", "black")) + 
   labs(title = "(A)", 
        y = bquote('forest loss'~(km^2)))  +
-  theme(text = element_text(size = 16), 
-        plot.title.position = "plot", 
-        legend.position = "top", legend.box = "horizontal") -> figa_loss_gva
+  theme(text = element_text(size = 20), 
+        plot.title.position = "plot") -> figa_loss_gva
 figa_loss_gva
 
 dfgam %>% 
@@ -167,9 +166,8 @@ dfgam %>%
              colour = c("blue", "black")) + 
   labs(title = "(B)", 
        y = bquote('forest loss'~(km^2)))  +
-  theme(text = element_text(size = 16), 
-        plot.title.position = "plot", 
-        legend.position = "top", legend.box = "horizontal") -> figb_loss_gdp
+  theme(text = element_text(size = 20), 
+        plot.title.position = "plot") -> figb_loss_gdp
 figb_loss_gdp
 
 #salary
@@ -195,9 +193,8 @@ dfgam %>%
              colour = c("blue", "black")) + 
   labs(title = "(C)", 
        y = bquote('forest loss'~(km^2)))  +
-  theme(text = element_text(size = 16), 
-        plot.title.position = "plot", 
-        legend.position = "top", legend.box = "horizontal") -> figa_loss_salary
+  theme(text = element_text(size = 20), 
+        plot.title.position = "plot") -> figa_loss_salary
 figa_loss_salary
 
 png(file = "data/figures//fig_loss_gdp_salary.png", 
@@ -748,24 +745,42 @@ df_muni %>%
   right_join(dfmatched %>% 
                select(state_name, muni_name, trees)) -> df_muni_matched
 df_muni_matched$cover_group <- as.factor(df_muni_matched$trees)
-levels(df_muni_matched$cover_group) <- c("less cover", 
-                                         "more cover", 
-                                         "more loss")
+levels(df_muni_matched$cover_group) <- c("low cover", 
+                                         "medium cover", 
+                                         "high cover")
 
 #Population
 df_muni_matched %>% pull(tot_pop_2019) %>% sum() -> pop_2019_matched
-pop_2019_matched/ pop_2019 *100
+pop_2019_matched/ pop_2019 *100 #37.8
 
 # Figure 4   ------------------------------------------------------
 # forest cover change and poverty
+# forest cover change and poverty
+dfgam %>% 
+  left_join(df_muni %>% select(state_name, muni_name, 
+                               flag_sanitation_plan, flag_int_complete_cover, 
+                               forestcover_1986med_percent_muni, 
+                               forestcover_2019med_percent_muni)) %>%
+  group_by(muni_factor, flag_urban, 
+           forestcover_1986med_percent_muni, 
+           forestcover_2019med_percent_muni,
+           flag_sanitation_plan, flag_int_complete_cover
+  ) %>% 
+  summarise(acount = n()) %>%
+  rename(urban_flag = flag_urban) %>%
+  mutate(cover_diff = forestcover_2019med_percent_muni - forestcover_1986med_percent_muni) %>% 
+  ungroup() -> dfpoverty
+
 dfpoverty %>% 
   select(muni_factor,urban_flag, 
-         flag_sanitation_plan, flag_int_complete_cover, cover_diff) %>%
+         flag_sanitation_plan, flag_int_complete_cover, 
+         cover_diff) %>%
   pivot_longer(cols = starts_with("flag")) %>% 
   mutate(myname = ifelse(name=="flag_sanitation_plan", "sanitation plan", 
-                         "full intenet connectivity")) %>% 
+                         "full internet connectivity")) %>% 
   filter(!is.na(value)) %>%
-  ggplot(aes(x = factor(value), y = cover_diff, fill = urban_flag)) + 
+  ggplot(aes(x = factor(value), y = cover_diff, 
+             fill = urban_flag)) + 
   #geom_point(aes(group=urban_flag), 
   #           position=position_jitterdodge(jitter.width = .05), 
   #           alpha = 0.2) + 
@@ -789,12 +804,14 @@ nudgeHeight = 0.1
 nudgeVecH <- (runif(nrow(df_muni_matched))-0.5)*nudgeHeight
 
 #internet
+levels(df_muni_matched$cover_group) # check so get labels right
 df_muni_matched %>% 
   ggplot(aes(x = cover_group, y = flag_int_complete_cover)) + 
   geom_violin() + 
   scale_y_continuous("full internet\nconnectivity", 
                      breaks = c(0,1), labels = c("no", "yes")) + 
-  scale_x_discrete("forest cover", labels = c("less", "more", "more loss")) +
+  scale_x_discrete("forest cover", 
+                   labels = c("low", "medium", "high")) +
   geom_point(position=position_nudge(x = nudgeVec, y = nudgeVecH), 
              alpha=0.35, size =1,
              aes(colour=cover_group)) + 
@@ -812,7 +829,8 @@ df_muni_matched %>%
   geom_violin() +
   scale_y_continuous("sanitation plan\napproved", 
                      breaks = c(0,1), labels = c("no", "yes")) +
-  scale_x_discrete("forest cover", labels = c("less", "more", "more loss")) +
+  scale_x_discrete("forest cover", 
+                   labels = c("low", "medium", "high")) +
   geom_point(position=position_nudge(x = nudgeVec, y = nudgeVecH), 
              alpha=0.35, size = 1,
              aes(colour=cover_group)) + 
@@ -825,7 +843,7 @@ df_muni_matched %>%
 fig_essential_sani
 
 #Export
-png(file = "data/figures//fig_essentials_matched.png", 
+png(file = "data/figures//fig_socioeconomic_matched.png", 
     bg = "white", type = c("cairo"), 
     width=3500, height=2000, res = 600)
 lay <- rbind(c(1,1,2,2),
@@ -867,13 +885,14 @@ df_muni_matched %>%
             tot_san = sum(flag_sanitation_plan)) %>% 
   mutate(tot_no_san = tot_pop - tot_san, 
          prop_san = tot_san/tot_pop)
-sanitation <- c(12, 29, 23)
-nosanitation <- c(29, 176, 88)
-totpop <- c(41, 205, 111)
+sanitation <- c(12, 23, 29)
+nosanitation <- c(29, 88, 176)
+totpop <- c(41, 111, 205)
 prop.test(sanitation, totpop)
 #X-squared = 6.1645, df = 2, p-value = 0.04585
-#   prop 1    prop 2    prop 3 
-#0.2926829 0.1414634 0.2072072 
+#sample estimates:
+#  prop 1    prop 2    prop 3 
+#0.2926829 0.2072072 0.1414634 
 
 #Internet
 df_muni_matched %>% 
@@ -883,12 +902,12 @@ df_muni_matched %>%
             tot_int = sum(flag_int_complete_cover)) %>% 
   mutate(tot_no_int = tot_pop - tot_int, 
          prop_int = tot_int/tot_pop)
-internet <- c(17, 82, 38)
-nointernet <- c(24, 122, 73)
+internet <- c(17, 38, 82)
+nointernet <- c(24, 73, 122)
 prop.test(internet, totpop)
 #X-squared = 1.1991, df = 2, p-value = 0.5491
 #   prop 1    prop 2    prop 3 
-#0.4146341 0.4000000 0.3423423 
+#0.4146341 0.3423423 0.4000000  
 
 #Both
 df_muni_matched %>% 
@@ -900,11 +919,11 @@ df_muni_matched %>%
             tot_both = sum(flag_both)) %>% 
   mutate(tot_no_both = tot_pop - tot_both, 
          prop_both = tot_both/tot_pop)
-both <- c(5, 14, 8)
+both <- c(5, 8, 14)
 prop.test(both, totpop)
 #X-squared = 1.4363, df = 2, p-value = 0.4876
 #    prop 1     prop 2     prop 3 
-#0.12195122 0.06829268 0.07207207
+#0.12195122 0.07207207 0.06829268
 
 # Matched comparisons ------------------------------------------
 # Median and range for data table
