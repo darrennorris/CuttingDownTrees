@@ -1,40 +1,41 @@
-#sample size?
+# Sample size?
 library(plyr)
 library(tidyverse)
 library(mgcv)
 memory.limit(30000)
 
 # load data
-#file from run_analysis.R
-#Years from 2006 - 2019
+# file from run_analysis.R
+# Years from 2006 - 2019
 dfgam_matched_model <- readRDS("data/dfgam_matched_model.rds") #4998 obs. 42 vars
 
-#Jacknife randomization to test if results depend on number of municipalities
-#Identify municipalities
-dfgam_matched_model %>% filter(cover_group == "less cover") %>% 
-  pull(muni_factor) %>% unique() %>% as.character() -> muni_less
-dfgam_matched_model %>% filter(cover_group == "more cover") %>% 
-  pull(muni_factor) %>% unique() %>% as.character() -> muni_more
-dfgam_matched_model %>% filter(cover_group == "more cover\nwith loss") %>% 
-  pull(muni_factor) %>% unique() %>% as.character() -> muni_moreloss
+# Jacknife randomization to test if results depend on number of municipalities
+# Identify municipalities
+dfgam_matched_model %>% filter(cover_group == "low forest cover") %>% 
+  pull(muni_factor) %>% unique() %>% as.character() -> muni_low
+dfgam_matched_model %>% filter(cover_group == "medium forest cover") %>% 
+  pull(muni_factor) %>% unique() %>% as.character() -> muni_medium
+dfgam_matched_model %>% filter(cover_group == "high forest cover") %>% 
+  pull(muni_factor) %>% unique() %>% as.character() -> muni_high
+
 #sizes to use
-sample_size <- length(unique(muni_less)) #41
+sample_size <- length(unique(muni_low)) #41
 n_iterate <- 999
 #Dataframe with equal sample sizes randomized 999 times
 rbind(
 #less
 data.frame(run_id = rep(1:n_iterate, each = sample_size), 
-           muni_id = rep(muni_less, n_iterate), 
+           muni_id = rep(muni_low, n_iterate), 
            cover_group = "less cover"),
 #more
-data.frame(run_id = rep(1:n_iterate, each = length(muni_more)), 
-           muni_id = rep(muni_more,n_iterate), 
+data.frame(run_id = rep(1:n_iterate, each = length(muni_high)), 
+           muni_id = rep(muni_high,n_iterate), 
            cover_group = "more cover") %>% 
    group_by(run_id) %>% slice_sample(n = sample_size) %>% 
    ungroup(),
 #more with loss
-data.frame(run_id = rep(1:n_iterate, each = length(muni_moreloss)), 
-           muni_id = rep(muni_moreloss,n_iterate), 
+data.frame(run_id = rep(1:n_iterate, each = length(muni_medium)), 
+           muni_id = rep(muni_medium,n_iterate), 
            cover_group = "more cover\nwith loss") %>% 
   group_by(run_id) %>% slice_sample(n = sample_size) %>% 
   ungroup() 
@@ -48,7 +49,7 @@ dfruns %>% select(run_id, muni_id) %>%
   arrange(run_id, cover_group) %>%
   data.frame() -> dftest_random # 1720278 rows 41*3 *999*14 = 1720278
 
-#function holding models
+# function holding models
 mygams <- function(x) {
   #run model for each randomized sample
   dftest <- x
@@ -158,7 +159,7 @@ dfout
 #rid_100 <- 1:((41*3*14)*100)
 #dfcheck_100 <- plyr::ddply(dftest_random[rid_100, ], .(run_id) ,.fun = mygams)
 
-#run models for each randomized sample 10
+#run models for each randomized sample. 3 hours approx
 dfcheck <- plyr::ddply(dftest_random, .(run_id) ,.fun = mygams)
 saveRDS(dfcheck, "data/dfcheck.RDS")
 dfcheck <- readRDS("data/dfcheck.RDS")
@@ -177,8 +178,9 @@ dfcheck %>%
 #dfcheck_10 %>% 
 dfcheck %>% 
   filter(!var_name== "(Intercept)") %>% 
-  mutate(var_name = if_else(var_name=="cover_groupmore cover", 
-                            "more cover", "more cover\nwith loss")) %>%
+  mutate(var_name = if_else(var_name=="cover_groupmedium forest cover", 
+                            "medium forest cover", 
+                            "high forest cover")) %>%
   ggplot(aes(x=pval)) + 
   geom_histogram(bins=50) + 
   geom_vline(xintercept = 0.05, colour="blue", size=1) +
