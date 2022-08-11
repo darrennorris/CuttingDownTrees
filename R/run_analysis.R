@@ -11,6 +11,7 @@ library(rnaturalearthdata)
 library(rnaturalearth)
 library(ggspatial)
 library(gratia)
+library(Hmisc)
 memory.limit(30000)
 
 # load data
@@ -529,7 +530,7 @@ levels(dfgam_matched$cover_group) <- c("low forest cover",
                                        "medium forest cover", 
                                        "high forest cover")
 
-# Study area map ----------------------------------------------------------
+# Figure 1 Study area map ----------------------------------------------------------
 
 # Study area map showing matched locations
 # Basic reference vectors
@@ -582,7 +583,7 @@ sf_ninestate_muni %>%
 fig_map_studyarea
 
 #export
-png(file = "data/figures/fig_map_studyarea.png", bg = "white", 
+png(file = "data/figures/fig1_map_studyarea.png", bg = "white", 
     type = c("cairo"), 
     width=8000, height=4000, res = 600)
 fig_map_studyarea
@@ -597,53 +598,6 @@ dfgam %>%
   filter(year == 2019) %>% 
   pull(tot_pop) %>% sum() -> pop_total_2019
 pop_total_2019 #21113376
-
-#Figure 3
-
-dfgam_matched %>% 
-  filter(!is.na(min_salary_mean)) %>%
-  ggplot(aes(x=year, y=gva_agri_percapita_reais / 3.946)) + 
-  geom_point() + 
-  stat_smooth(method = "lm") + 
-  facet_wrap(~cover_group) + 
-  scale_y_continuous("agriculture GVA per capita (US$)", 
-                     labels = scales::unit_format(unit = "k", 
-                                                  scale = 1e-3)) + 
-  labs(title = "(A)") +
-  theme(plot.title.position = "plot") -> fig_GVA_matched
-fig_GVA_matched
-
-dfgam_matched %>% 
-  filter(!is.na(min_salary_mean)) %>%
-  ggplot(aes(x=year, y=gdp_percapita_reais / 3.946)) + 
-  geom_point() + 
-  stat_smooth(method = "lm") + 
-  facet_wrap(~cover_group) + 
-  scale_y_continuous("GDP per capita (US$)", 
-                     labels = scales::unit_format(unit = "k", 
-                                                  scale = 1e-3)) + 
-  labs(title = "(B)") +
-  theme(plot.title.position = "plot") -> fig_GDP_matched
-fig_GDP_matched
-
-dfgam_matched %>% 
-  filter(!is.na(min_salary_mean)) %>%
-  ggplot(aes(x=year, y=min_salary_mean)) + 
-  geom_point() + 
-  stat_smooth(method = "lm") + 
-  facet_wrap(~cover_group) + 
-  scale_y_continuous("average salary") + 
-  labs(title = "(C)") +
-  theme(plot.title.position = "plot") -> fig_salary_matched
-fig_salary_matched
-#Export
-png(file = "data/figures//fig_economic_matched.png", 
-    bg = "white", type = c("cairo"), 
-    width=4000, height=5000, res = 600)
-grid.arrange(fig_GVA_matched, 
-             fig_GDP_matched, fig_salary_matched, ncol = 1)
-dev.off()
-
 
 # GAMs Matched municipalities --------------------------------------------
 # values for tweedie and AR1 calculated in "gdp_bams.R"
@@ -736,6 +690,67 @@ summary(bam_loss_02)
 plot(bam_loss_02, scale = 0, all.terms = TRUE) # 500 W x 400 H
 
 
+
+# Figure 3-----------------------------------------
+# 
+dfgam_matched %>% 
+  filter(!is.na(min_salary_mean)) %>%
+  ggplot(aes(x=year, y=gva_agri_percapita_reais / 3.946)) + 
+  geom_point() + 
+  stat_smooth(method = "lm") + 
+  facet_wrap(~cover_group) + 
+  scale_y_continuous("agriculture GVA per capita (US$)", 
+                     labels = scales::unit_format(unit = "k", 
+                                                  scale = 1e-3)) + 
+  labs(title = "(A)") +
+  theme(plot.title.position = "plot") -> fig_GVA_matched
+fig_GVA_matched
+
+dfgam_matched %>% 
+  filter(!is.na(min_salary_mean)) %>%
+  ggplot(aes(x=year, y=gdp_percapita_reais / 3.946)) + 
+  geom_point() + 
+  stat_smooth(method = "lm") + 
+  facet_wrap(~cover_group) + 
+  scale_y_continuous("GDP per capita (US$)", 
+                     labels = scales::unit_format(unit = "k", 
+                                                  scale = 1e-3)) + 
+  labs(title = "(B)") +
+  theme(plot.title.position = "plot") -> fig_GDP_matched
+fig_GDP_matched
+
+dfgam_matched %>% 
+  filter(!is.na(min_salary_mean)) %>%
+  ggplot(aes(x=year, y=min_salary_mean)) + 
+  geom_point() + 
+  stat_smooth(method = "lm") + 
+  facet_wrap(~cover_group) + 
+  scale_y_continuous("average salary") + 
+  labs(title = "(C)") +
+  theme(plot.title.position = "plot") -> fig_salary_matched
+fig_salary_matched
+#Export
+png(file = "data/figures//fig_economic_matched.png", 
+    bg = "white", type = c("cairo"), 
+    width=4000, height=5000, res = 600)
+grid.arrange(fig_GVA_matched, 
+             fig_GDP_matched, fig_salary_matched, ncol = 1)
+dev.off()
+
+#Export
+pdf(file = "data/figures//fig_economic_matched.pdf", 
+    width=6, height=8)
+grid.arrange(fig_GVA_matched, 
+             fig_GDP_matched, fig_salary_matched, ncol = 1)
+dev.off()
+
+
+# Partial from GAMs 
+# Export (save as) pdf as landscape 4 x 3.5 inches
+plot(bam_loss_gva, scale = 0, all.terms = TRUE, select = 7)
+plot(bam_loss_01, scale = 0, all.terms = TRUE, select = 7)
+plot(bam_loss_02, scale = 0, all.terms = TRUE, select = 7)
+
 # Socioeconomic indicators --------------------------------------------------------
 # other essentials to a standard of living
 df_muni %>% filter(flag_include == "yes") %>% 
@@ -754,7 +769,6 @@ df_muni_matched %>% pull(tot_pop_2019) %>% sum() -> pop_2019_matched
 pop_2019_matched/ pop_2019 *100 #37.8
 
 # Figure 4   ------------------------------------------------------
-# forest cover change and poverty
 # forest cover change and poverty
 dfgam %>% 
   left_join(df_muni %>% select(state_name, muni_name, 
@@ -843,7 +857,7 @@ df_muni_matched %>%
 fig_essential_sani
 
 #Export
-png(file = "data/figures//fig_socioeconomic_matched.png", 
+png(file = "data/figures//fig4_socioeconomic_matched.png", 
     bg = "white", type = c("cairo"), 
     width=3500, height=2000, res = 600)
 lay <- rbind(c(1,1,2,2),
@@ -853,7 +867,7 @@ grid.arrange(fig_essential_cover,
              layout_matrix = lay)
 dev.off()
 
-#Explain
+# Explain
 # With both internet and sanitation
 dfpoverty %>% 
   filter(flag_sanitation_plan ==1, flag_int_complete_cover ==1) %>%
@@ -925,7 +939,7 @@ prop.test(both, totpop)
 #    prop 1     prop 2     prop 3 
 #0.12195122 0.07207207 0.06829268
 
-# Matched comparisons ------------------------------------------
+# Figure 5 Matched comparisons ------------------------------------------
 # Median and range for data table
 df_muni_matched %>% 
   group_by(trees) %>% 
@@ -977,55 +991,60 @@ dfmatched %>%
   group_by(trees, flag_urbanf) %>% 
   summarise(urban = length(flag_urbanf)) 
 
-library(Hmisc)
-png(file = "data/figures//fig_back2back.png", 
-    bg = "white", type = c("cairo"), 
-    width=1500, height=7000, res = 600)
-par(mfrow = c(6, 1))
-histbackback(df_muni_cover40$muni_area_km2, 
-             df_muni_cover60$muni_area_km2, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "municipality size (km2)")
-histbackback(df_muni_cover40$dist_statecapital_km, 
-             df_muni_cover60$dist_statecapital_km, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "distance to state capital (km)")
-histbackback(df_muni_cover40$median_pop_dens, 
-             df_muni_cover60$median_pop_dens, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "population density")
-histbackback(df_muni_cover40$indigenous_area_percent, 
-             df_muni_cover60$indigenous_area_percent, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "indigenous area (%)")
-histbackback(df_muni_cover40$median_industry, 
-             df_muni_cover60$median_industry, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "industry  value contribution (%)")
-histbackback(df_muni_cover40$forestcover_2019med_percent_muni, 
-             df_muni_cover60$forestcover_2019med_percent_muni, probability=TRUE, 
-             xlab = c("<=40",">=60"), main = "forest cover 2019 (%)") 
-dev.off()
-
-#loss
-png(file = "data/figures//fig_back2backloss.png", 
-    bg = "white", type = c("cairo"), 
-    width=1500, height=7000, res = 600)
-par(mfrow = c(6, 1))
+# Back to back histograms
+# low vs medium
+pdf(file = "data/figures//fig_back2back_medium.pdf", 
+    width=3, height=14)
+par(mar=c(4, 3, 2, 0.2), mfrow = c(6, 1), 
+    mgp=c(1.5, 1, 0),
+    oma = c(2, 2, 2, 2))
 histbackback(df_muni_cover40$muni_area_km2, 
              df_muni_cover60less$muni_area_km2, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "municipality size (km2)")
+             xlab = c("low","medium"), main = "municipality size (km2)")
 histbackback(df_muni_cover40$dist_statecapital_km, 
              df_muni_cover60less$dist_statecapital_km, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "distance to state capital (km)")
+             xlab = c("low","medium"), main = "distance to state capital (km)")
 histbackback(df_muni_cover40$median_pop_dens, 
              df_muni_cover60less$median_pop_dens, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "population density")
+             xlab = c("low","medium"), main = "population density")
 histbackback(df_muni_cover40$indigenous_area_percent, 
              df_muni_cover60less$indigenous_area_percent, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "indigenous area (%)")
+             xlab = c("low","medium"), main = "indigenous area (%)")
 histbackback(df_muni_cover40$median_industry, 
              df_muni_cover60less$median_industry, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "industry  value contribution (%)")
+             xlab = c("low","medium"), main = "industry  value contribution (%)")
 histbackback(df_muni_cover40$forestcover_2019med_percent_muni, 
              df_muni_cover60less$forestcover_2019med_percent_muni, probability=TRUE, 
-             xlab = c("<=40",">=60 loss"), main = "forest cover 2019 (%)") 
+             xlab = c("low","medium"), main = "forest cover 2019 (%)") 
 dev.off()
+
+# low vs high
+pdf(file = "data/figures//fig_back2back_high.pdf", 
+    width=3, height=14)
+par(mar=c(4, 3, 2, 0.2), mfrow = c(6, 1), 
+    mgp=c(1.5, 1, 0),
+    oma = c(2, 2, 2, 2))
+histbackback(df_muni_cover40$muni_area_km2, 
+             df_muni_cover60$muni_area_km2, probability=TRUE, 
+             xlab = c("low","high"), main = "municipality size (km2)")
+histbackback(df_muni_cover40$dist_statecapital_km, 
+             df_muni_cover60$dist_statecapital_km, probability=TRUE, 
+             xlab = c("low","high"), main = "distance to state capital (km)")
+histbackback(df_muni_cover40$median_pop_dens, 
+             df_muni_cover60$median_pop_dens, probability=TRUE, 
+             xlab = c("low","high"), main = "population density")
+histbackback(df_muni_cover40$indigenous_area_percent, 
+             df_muni_cover60$indigenous_area_percent, probability=TRUE, 
+             xlab = c("low","high"), main = "indigenous area (%)")
+histbackback(df_muni_cover40$median_industry, 
+             df_muni_cover60$median_industry, probability=TRUE, 
+             xlab = c("low","high"), main = "industry  value contribution (%)")
+histbackback(df_muni_cover40$forestcover_2019med_percent_muni, 
+             df_muni_cover60$forestcover_2019med_percent_muni, probability=TRUE, 
+             xlab = c("low","high"), main = "forest cover 2019 (%)") 
+dev.off()
+
+
 
 # Supplemental material ---------------------------------------------------
 
