@@ -52,13 +52,37 @@ df_muni_year %>%
 which(is.na(dfgam)[,3]) #2176 salary values
 
 #remaining forest cover per state
-df_muni %>% 
+
+#
+bind_rows(df_muni %>% 
   group_by(state_name) %>% 
   summarise(state_area_km2 = sum(muni_area_km2), 
             forest_area_km2 = sum(forestcover_med_km_X2019)) %>% 
-  mutate(state_forest_percent = (forest_area_km2 / state_area_km2)*100) %>% 
-  arrange(desc(state_forest_percent)) %>% 
-  kableExtra::kbl()
+  mutate(state_forest_percent = round((forest_area_km2 / state_area_km2)*100,1), 
+         conservation_group = 
+           case_when(state_forest_percent>=80~"conservation", 
+                     state_forest_percent>=60 & state_forest_percent<80 ~"conservation/restoration",
+                     state_forest_percent<60 ~"restoration"), 
+         totals =NA_character_) %>% 
+  select(totals, state_name, conservation_group, state_area_km2, forest_area_km2, 
+         state_forest_percent) %>%
+  arrange(desc(state_forest_percent)), 
+  df_muni %>%
+    summarise(state_area_km2 = sum(muni_area_km2), 
+              forest_area_km2 = sum(forestcover_med_km_X2019)) %>% 
+    mutate(totals = "total", 
+           state_name = NA_character_,
+           conservation_group = NA_character_, 
+           state_forest_percent = round((forest_area_km2 / state_area_km2)*100,1)) %>% 
+    select(totals, state_name, conservation_group, state_area_km2, forest_area_km2, 
+           state_forest_percent)
+  ) %>% 
+  mutate(totals = replace_na(totals,""), 
+         state_name = replace_na(state_name,""), 
+          conservation_group = replace_na(conservation_group,"")) %>%
+  kableExtra::kbl() %>% 
+  kableExtra::row_spec(c(1:3,7:9), background = "lightgrey")
+
 #state_name  state_area_km2 forest_area_km2 state_forest_percent
 #1 Amazonas          1559168.        1451360.                 93.1
 #2 Acre               164124.         141714.                 86.3
