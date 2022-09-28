@@ -57,7 +57,8 @@ df_muni %>%
   summarise(state_area_km2 = sum(muni_area_km2), 
             forest_area_km2 = sum(forestcover_med_km_X2019)) %>% 
   mutate(state_forest_percent = (forest_area_km2 / state_area_km2)*100) %>% 
-  arrange(desc(state_forest_percent))
+  arrange(desc(state_forest_percent)) %>% 
+  kableExtra::kbl()
 #state_name  state_area_km2 forest_area_km2 state_forest_percent
 #1 Amazonas          1559168.        1451360.                 93.1
 #2 Acre               164124.         141714.                 86.3
