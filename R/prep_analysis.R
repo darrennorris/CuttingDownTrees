@@ -51,6 +51,24 @@ df_muni_year %>%
          format = c("%Y-%m-%d")) -> dfgam
 which(is.na(dfgam)[,3]) #2176 salary values
 
+#remaining forest cover per state
+df_muni %>% 
+  group_by(state_name) %>% 
+  summarise(state_area_km2 = sum(muni_area_km2), 
+            forest_area_km2 = sum(forestcover_med_km_X2019)) %>% 
+  mutate(state_forest_percent = (forest_area_km2 / state_area_km2)*100) %>% 
+  arrange(desc(state_forest_percent))
+#state_name  state_area_km2 forest_area_km2 state_forest_percent
+#1 Amazonas          1559168.        1451360.                 93.1
+#2 Acre               164124.         141714.                 86.3
+#3 Amapá              142471.         116483.                 81.8
+#4 Pará              1245871.         940780.                 75.5
+#5 Roraima            223645.         162252.                 72.5
+#6 Maranhão           329642.         208143.                 63.1
+#7 Rondônia           237765.         136667.                 57.5
+#8 Mato Grosso        903207.         496192.                 54.9
+#9 Tocantins          277467.         147200.                 53.1
+
 #new variables
 dfgam %>% 
   mutate(flag_gold = 
