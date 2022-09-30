@@ -33,8 +33,6 @@ Our findings support evidence from across the tropics that show deforestation do
 
 ## Steps to repeat analysis
 
-..... in progress ........
-
 Files are organized in two folders: [R](https://github.com/darrennorris/CuttingDownTrees/tree/main/R) that has code files and [data](https://github.com/darrennorris/CuttingDownTrees/tree/main/data) that has everything else.
 
 ### Step 1 preparation
