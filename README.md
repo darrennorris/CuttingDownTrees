@@ -2,7 +2,7 @@
 
 <a href="https://zenodo.org/badge/latestdoi/490787288"><img src="https://zenodo.org/badge/490787288.svg" alt="DOI"></a> Data and R code to accompany the article:
 
-<img align="right" src="data/www/graphical_summary.png" alt="Amazon forest cover" width="300" style="margin-top: 20px">
+<img align="right" src="data/www/graphical_summary.png" alt="Amazon forest cover" width="250" style="margin-top: 20px">
 
 [NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) *et. al*. Cutting down trees does not build prosperity: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *EarthArXiv* pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
 
