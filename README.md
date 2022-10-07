@@ -6,7 +6,10 @@
 
 Data and R code to accompany the article:
 
-[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) *et. al*. <strong>Cutting down trees does not build prosperity</strong>: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *EarthArXiv* pre-print (not peer reviewed): https://doi.org/10.31223/X51S8P 
+[NORRIS, D](https://scholar.google.com/citations?user=pi4S-KkAAAAJ&hl=en&oi=ao) *et. al*. <strong>Cutting down trees does not build prosperity</strong>: On the continued decoupling of Amazon deforestation and economic development in 21st century Brazil. *Tropical Conservation Science* : https://doi.org/10.1177/19400829221132193
+
+Portuguese version of the main text: 
+https://www.researchgate.net/publication/364123197_Norris2022_CuttingDownTrees_Ptpdf
 
 <strong>AIM</strong>: Apply the most up to date data to examine spatial and temporal patterns in forest cover changes and economic progress in Brazilian Amazonia.
 
